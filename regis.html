@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Register</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="loginpage" aria-labelledby="login-heading">
+        <h1 id="login-heading">Register</h1>
+
+        <form id="loginForm" action="#" method="POST" novalidate>
+            
+            <div class="login glass">
+
+                <label for="email" class="sr-only">Email</label>
+                <div class="input-wrapper mail-wrapper">
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"a
+                        placeholder="email"
+                        minlength="8"
+                        maxlength="50"
+                        required
+                        aria-describedby="invalid-email"
+                    />
+                    <span class="input-icon mail-icon" aria-hidden="true"></span>
+                </div>
+                <div id="invalid-email" class="error" aria-live="polite"></div>
+
+                <label for="username" class="sr-only">Username</label>
+                <div class="input-wrapper user-wrapper">
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        placeholder="username"
+                        minlength="3"
+                        maxlength="50"
+                        required
+                        aria-describedby="invalid-user"
+                    />
+                    <span class="input-icon user-icon" aria-hidden="true"></span>
+                </div>
+                <div id="invalid-user" class="error" aria-live="polite"></div>
+
+                <label for="password" class="sr-only">Password</label>
+                <div class="input-wrapper lock-wrapper">
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="password"
+                        minlength="8"
+                        maxlength="50"
+                        autocomplete="off"
+                        required
+                        aria-describedby="invalid-pass"
+                    />
+                    <span class="input-icon lock-icon" aria-hidden="true"></span>
+                </div>
+                <div id="invalid-pass" class="error" aria-live="polite"></div>
+
+                <div id="same-user-pw" class="error" aria-live="polite"></div>
+            </div>
+
+            <div class="remember-me">
+                <div class="remember">
+                    <input type="checkbox" name="remember" id="remember">
+                    <label for="remember">remember me</label>
+                </div>
+                <a href="#" class="forgot">Forgot Password?</a>
+            </div>
+
+            <div class="submit">
+                <button type="submit" id="submitBtn" class="login-btn">Register</button>
+            </div>
+        </form>
+
+        <div class="no-account">
+            <p>Already have an account?</p>
+            <a href="loginstaff.html">Login</a>
+        </div>
+    </main>
+
+    <script src="regis.js"></script>
+</body>
+</html>
