@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Monthly Plans</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+    <!-- ===== Navbar (Matches loginstaff.html aesthetic) ===== -->
+    <header class="navbar">
+        <div class="navbar-brand">
+            <img src="../assets/logo.jpg" alt="Staff Logo" class="logo-mark" />
+            <span>Monthly Plans</span>
+        </div>
+        <div class="navbar-user">
+            <div class="staff-pill">
+                <span class="staff-status-dot" aria-hidden="true"></span>
+                <span>Staff: <strong>Karl Lopez</strong></span>
+            </div>
+            <a href="../loginstaff.html" class="logout-link">Logout</a>
+        </div>
+    </header>
+
+    <main class="page">
+
+        <!-- Navigation Tabs (Pure HTML links) -->
+        <nav class="tabs" aria-label="Dashboard Navigation">
+            <a href="dashboard.html" class="tab">Guest &amp; Day Pass</a>
+            <a href="monthly.html" class="tab active">Monthly Plans</a>
+            <a href="members.html" class="tab">Members List</a>
+            <a href="addmember.html" class="tab">Add Member</a>
+        </nav>
+
+        <section class="panel">
+            <h1 class="panel-title">Monthly Membership Plans</h1>
+            <p class="panel-subtitle">Select a monthly subscription plan to renew or register gym members.</p>
+
+            <!-- Monthly Options Cards -->
+            <div class="monthly-options">
+                
+                <!-- STUDENT MONTHLY (₱700) -->
+                <div class="monthly-card">
+                    <div>
+                        <span class="pass-tag">Student Discount</span>
+                        <h2>STUDENT MEMBERSHIP</h2>
+                        <p>Valid student ID required upon initial registration or renewal.</p>
+                        <div class="price">₱ 700 <span style="font-size: 0.85rem; font-weight: normal; color: #444;">/ month</span></div>
+                        <ul class="pass-features">
+                            <li><span>✓</span> Unlimited 30-day gym floor access</li>
+                            <li><span>✓</span> Free locker &amp; shower amenities</li>
+                            <li><span>✓</span> Fitness orientation included</li>
+                        </ul>
+                    </div>
+                    <button type="button" class="tap-btn">Select Student Plan (₱700)</button>
+                </div>
+
+                <!-- NON-STUDENT MONTHLY (₱750) -->
+                <div class="monthly-card">
+                    <div>
+                        <span class="pass-tag member-tag">Regular Rate</span>
+                        <h2>NON-STUDENT MEMBERSHIP</h2>
+                        <p>Standard full-access monthly membership for regular gym goers.</p>
+                        <div class="price">₱ 750 <span style="font-size: 0.85rem; font-weight: normal; color: #444;">/ month</span></div>
+                        <ul class="pass-features">
+                            <li><span>✓</span> Unlimited 30-day all-hours gym access</li>
+                            <li><span>✓</span> Free locker &amp; shower amenities</li>
+                            <li><span>✓</span> 1 complimentary guest day pass voucher</li>
+                        </ul>
+                    </div>
+                    <button type="button" class="tap-btn">Select Regular Plan (₱750)</button>
+                </div>
+
+            </div>
+
+            <!-- Member Selection / Renewal Box -->
+            <div class="select-member-box">
+                <div class="select-member-title">Assign or Renew for Member</div>
+                <div class="select-member-form">
+                    <input type="text" class="form-control" placeholder="Search or select member name / ID..." />
+                    <select class="form-control">
+                        <option value="cash">Payment: Cash</option>
+                        <option value="gcash">Payment: GCash</option>
+                        <option value="card">Payment: Card</option>
+                    </select>
+                    <button type="button" class="save-member-btn" style="margin-top: 0; padding: 0.85rem 1rem;">Process Plan</button>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+</body>
+</html>

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Guest & Day Pass</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+    <!-- ===== Navbar (Matches loginstaff.html aesthetic) ===== -->
+    <header class="navbar">
+        <div class="navbar-brand">
+            <img src="../assets/logo.jpg" alt="Staff Logo" class="logo-mark" />
+            <span>Guest & Day Pass</span>
+        </div>
+        <div class="navbar-user">
+            <div class="staff-pill">
+                <span class="staff-status-dot" aria-hidden="true"></span>
+                <span>Staff: <strong>Karl Lopez</strong></span>
+            </div>
+            <a href="../loginstaff.html" class="logout-link">Logout</a>
+        </div>
+    </header>
+
+    <main class="page">
+
+        <!-- ===== Expiring-soon banner ===== -->
+        <div class="banner">
+            <span><strong>Notice:</strong> 3 memberships are expiring this week.</span>
+            <a href="members.html" class="banner-link">View Members</a>
+        </div>
+
+        <!-- ===== Summary cards ===== -->
+        <section class="summary-grid">
+            <div class="summary-card revenue">
+                <div class="label">
+                    <span>Today's Revenue</span>
+                    <span class="card-badge">Daily Total</span>
+                </div>
+                <div class="value">₱ 4,230</div>
+                <div class="card-note">+ Includes ₱980 from 14 Day Passes</div>
+            </div>
+            <div class="summary-card">
+                <div class="label">
+                    <span>Total Members</span>
+                    <span class="card-badge">Active</span>
+                </div>
+                <div class="value">128</div>
+                <div class="card-note">112 active · 13 expiring soon</div>
+            </div>
+            <div class="summary-card">
+                <div class="label">
+                    <span>Guest Passes Today</span>
+                    <span class="card-badge">Walk-ins</span>
+                </div>
+                <div class="value">14</div>
+                <div class="card-note">8 Non-Members (₱80) · 6 Members (₱60)</div>
+            </div>
+        </section>
+
+        <!-- ===== Tab navigation (Pure HTML links) ===== -->
+        <nav class="tabs" aria-label="Dashboard Navigation">
+            <a href="dashboard.html" class="tab active">Guest &amp; Day Pass</a>
+            <a href="monthly.html" class="tab">Monthly Plans</a>
+            <a href="members.html" class="tab">Members List</a>
+            <a href="addmember.html" class="tab">Add Member</a>
+        </nav>
+
+        <!-- ===== Selected tab content area ===== -->
+        <section class="panel">
+
+            <!-- Day Pass Section -->
+            <div class="daypass-section">
+                <div class="daypass-header">
+                    <div class="daypass-title-group">
+                        <h2>Regular Day Pass &amp; Walk-In Entry</h2>
+                        <p>Single tap to log entry — adds the pass balance to the current amount earned today</p>
+                    </div>
+                    <div class="balance-status-callout">
+                        <span>Current Day Total:</span>
+                        <strong>₱ 4,230.00</strong>
+                    </div>
+                </div>
+
+                <!-- Two Day Pass Cards -->
+                <div class="daypass-grid">
+
+                    <!-- NON-MEMBER PASS (₱80) -->
+                    <div class="daypass-card highlight">
+                        <div>
+                            <span class="pass-tag">Standard Walk-In</span>
+                            <h3>Non-Member Day Pass</h3>
+                            <p class="pass-desc">For walk-in visitors and non-registered guests looking for 1-day gym access.</p>
+                            
+                            <div class="pass-price-box">
+                                <span class="price-symbol">₱</span>
+                                <span class="price-amount">80</span>
+                                <span class="price-unit">/ single pass</span>
+                            </div>
+
+                            <ul class="pass-features">
+                                <li><span>✓</span> Full 1-day gym floor &amp; weight room access</li>
+                                <li><span>✓</span> Locker room &amp; shower amenities</li>
+                                <li><span>✓</span> Standard walk-in guest pass</li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <!-- Single tap button (front-end only) -->
+                            <button type="button" class="tap-btn" title="Single tap to add ₱80 to today's earnings">
+                                 Tap to Add Non-Member (+₱80)
+                            </button>
+                            <p class="tap-subtext">+ Adds ₱80.00 to current amount earned today</p>
+                        </div>
+                    </div>
+
+                    <!-- MEMBER PASS (₱60) -->
+                    <div class="daypass-card">
+                        <div>
+                            <span class="pass-tag member-tag">Member Rate · Save ₱20</span>
+                            <h3>Member Day Pass</h3>
+                            <p class="pass-desc">Special discounted daily rate for registered gym members or day-rate subscribers.</p>
+                            
+                            <div class="pass-price-box">
+                                <span class="price-symbol">₱</span>
+                                <span class="price-amount">60</span>
+                                <span class="price-unit">/ single pass</span>
+                            </div>
+
+                            <ul class="pass-features">
+                                <li><span>✓</span> Full facility, equipment &amp; studio access</li>
+                                <li><span>✓</span> Active member ID verification</li>
+                                <li><span>✓</span> Discounted loyalty member rate</li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <!-- Single tap button (front-end only) -->
+                            <button type="button" class="tap-btn" title="Single tap to add ₱60 to today's earnings">
+                                 Tap to Add Member (+₱60)
+                            </button>
+                            <p class="tap-subtext">+ Adds ₱60.00 to current amount earned today</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Recent Day Pass Quick Log -->
+            <div class="activity-box">
+                <div class="activity-header">
+                    <span class="activity-title">Today's Activity</span>
+                    <span class="activity-summary-pill">14 passes logged today (₱980 total)</span>
+                </div>
+
+                <div class="activity-list">
+                    <div class="activity-item">
+                        <div class="activity-item-left">
+                            <div class="activity-icon">💵</div>
+                            <div>
+                                <div class="activity-name">Non-Member Regular Day Pass</div>
+                                <div class="activity-time">Just now · Walk-in Visitor #14</div>
+                            </div>
+                        </div>
+                        <div class="activity-item-right">
+                            <span class="activity-price">+₱80.00</span>
+                            <span class="badge-credited">Balance Added</span>
+                        </div>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-item-left">
+                            <div class="activity-icon">💵</div>
+                            <div>
+                                <div class="activity-name">Member Regular Day Pass (ID #1088)</div>
+                                <div class="activity-time">18 minutes ago · Registered Member</div>
+                            </div>
+                        </div>
+                        <div class="activity-item-right">
+                            <span class="activity-price">+₱60.00</span>
+                            <span class="badge-credited">Balance Added</span>
+                        </div>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-item-left">
+                            <div class="activity-icon">💵</div>
+                            <div>
+                                <div class="activity-name">Non-Member Regular Day Pass</div>
+                                <div class="activity-time">42 minutes ago · Walk-in Visitor #13</div>
+                            </div>
+                        </div>
+                        <div class="activity-item-right">
+                            <span class="activity-price">+₱80.00</span>
+                            <span class="badge-credited">Balance Added</span>
+                        </div>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-item-left">
+                            <div class="activity-icon">💵</div>
+                            <div>
+                                <div class="activity-name">Member Regular Day Pass (ID #1045)</div>
+                                <div class="activity-time">1 hour ago · Registered Member</div>
+                            </div>
+                        </div>
+                        <div class="activity-item-right">
+                            <span class="activity-price">+₱60.00</span>
+                            <span class="badge-credited">Balance Added</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+</body>
+</html>

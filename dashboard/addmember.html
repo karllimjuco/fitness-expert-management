@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add Member</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+    <!-- ===== Navbar (Matches loginstaff.html aesthetic) ===== -->
+    <header class="navbar">
+        <div class="navbar-brand">
+            <img src="../assets/logo.jpg" alt="Staff Logo" class="logo-mark" />
+            <span>Add Member</span>
+        </div>
+        <div class="navbar-user">
+            <div class="staff-pill">
+                <span class="staff-status-dot" aria-hidden="true"></span>
+                <span>Staff: <strong>Karl Lopez</strong></span>
+            </div>
+            <a href="../loginstaff.html" class="logout-link">Logout</a>
+        </div>
+    </header>
+
+    <main class="page">
+
+        <!-- Navigation Tabs (Pure HTML links) -->
+        <nav class="tabs" aria-label="Dashboard Navigation">
+            <a href="dashboard.html" class="tab">Guest &amp; Day Pass</a>
+            <a href="monthly.html" class="tab">Monthly Plans</a>
+            <a href="members.html" class="tab">Members List</a>
+            <a href="addmember.html" class="tab active">Add Member</a>
+        </nav>
+
+        <section class="center-content">
+
+            <div class="add-member-form-card">
+                <h1 class="panel-title" style="text-align: center; margin-bottom: 0.5rem;">Register New Member</h1>
+                <p class="panel-subtitle" style="text-align: center; margin-bottom: 2rem;">Add a new client to the gym directory database</p>
+
+                <form action="members.html" method="GET">
+                    
+                    <!-- Full Name -->
+                    <div class="form-group">
+                        <label for="fullname">Full Name</label>
+                        <input type="text" id="fullname" name="fullname" class="form-control" placeholder="e.g. Juan Dela Cruz" required />
+                    </div>
+
+                    <!-- Contact / Email -->
+                    <div class="form-group">
+                        <label for="contact">Contact Number / Email</label>
+                        <input type="text" id="contact" name="contact" class="form-control" placeholder="e.g. 0917-123-4567 or email@example.com" required />
+                    </div>
+
+                    <!-- Member Type Toggle -->
+                    <div class="form-group">
+                        <label>Member Classification</label>
+                        <div class="member-type-toggle">
+                            <label class="type-toggle-option">
+                                <input type="radio" name="membertype" value="student" checked />
+                                <span class="type-toggle-label">🎓 Student</span>
+                            </label>
+                            <label class="type-toggle-option">
+                                <input type="radio" name="membertype" value="non-student" />
+                                <span class="type-toggle-label">💼 Non-Student</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Initial Plan Selection -->
+                    <div class="form-group">
+                        <label for="initialplan">Initial Membership / Pass Plan</label>
+                        <select id="initialplan" name="initialplan" class="form-control">
+                            <option value="student-monthly">Student Monthly (₱700 / mo)</option>
+                            <option value="nonstudent-monthly">Non-Student Monthly (₱750 / mo)</option>
+                            <option value="member-daypass">Member Day Pass Pre-load (₱60)</option>
+                            <option value="nonmember-daypass">Non-Member Regular Pass (₱80)</option>
+                        </select>
+                    </div>
+
+                    <!-- Start Date -->
+                    <div class="form-group">
+                        <label for="startdate">Membership Start Date</label>
+                        <input type="date" id="startdate" name="startdate" class="form-control" value="2026-09-29" />
+                    </div>
+
+                    <!-- Save Member Button -->
+                    <button type="submit" class="save-member-btn">SAVE MEMBER</button>
+
+                </form>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</body>
+</html>

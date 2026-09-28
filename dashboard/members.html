@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Members</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+    <!-- ===== Navbar (Matches loginstaff.html aesthetic) ===== -->
+    <header class="navbar">
+        <div class="navbar-brand">
+            <img src="../assets/logo.jpg" alt="Staff Logo" class="logo-mark" />
+            <span>Members List</span>
+        </div>
+        <div class="navbar-user">
+            <div class="staff-pill">
+                <span class="staff-status-dot" aria-hidden="true"></span>
+                <span>Staff: <strong>Karl Lopez</strong></span>
+            </div>
+            <a href="../loginstaff.html" class="logout-link">Logout</a>
+        </div>
+    </header>
+
+    <main class="page">
+
+        <!-- Navigation Tabs (Pure HTML links) -->
+        <nav class="tabs" aria-label="Dashboard Navigation">
+            <a href="dashboard.html" class="tab">Guest &amp; Day Pass</a>
+            <a href="monthly.html" class="tab">Monthly Plans</a>
+            <a href="members.html" class="tab active">Members List</a>
+            <a href="addmember.html" class="tab">Add Member</a>
+        </nav>
+
+        <!-- Members Content Panel -->
+        <section class="panel">
+            <h1 class="panel-title">Registered Members Directory</h1>
+            <p class="panel-subtitle">View, search, and manage registered members and their active subscription status.</p>
+
+            <!-- Search Bar -->
+            <div class="member-search-bar">
+                <input type="text" class="member-search-input" placeholder="🔍  Search by member name, ID, or phone number..." />
+            </div>
+
+            <!-- Filter Status Chips -->
+            <div class="member-stats-row">
+                <span class="filter-chip active">All Members (128)</span>
+                <span class="filter-chip">Active (112)</span>
+                <span class="filter-chip">Expiring Soon (13)</span>
+                <span class="filter-chip">Expired (3)</span>
+            </div>
+
+            <!-- Members Table -->
+            <div class="table-responsive">
+                <table class="members-table">
+                    <thead>
+                        <tr>
+                            <th>Member Name</th>
+                            <th>Membership Type</th>
+                            <th>Expiry Date</th>
+                            <th>Day Pass Eligible</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Dela Cruz, Ana</strong><br><span style="font-size: 0.75rem; color: var(--brandcolor-1);">ID: #1024</span></td>
+                            <td>Student Monthly (₱700)</td>
+                            <td>Oct 3, 2026</td>
+                            <td>Member Rate (₱60)</td>
+                            <td><span class="badge active">Active</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Santos, Mark</strong><br><span style="font-size: 0.75rem; color: var(--brandcolor-1);">ID: #1031</span></td>
+                            <td>Non-Student Monthly (₱750)</td>
+                            <td>Sep 28, 2026</td>
+                            <td>Member Rate (₱60)</td>
+                            <td><span class="badge expiring">Expiring Soon</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Reyes, Liza</strong><br><span style="font-size: 0.75rem; color: var(--brandcolor-1);">ID: #1019</span></td>
+                            <td>Student Monthly (₱700)</td>
+                            <td>Sep 15, 2026</td>
+                            <td>Non-Member Rate (₱80)</td>
+                            <td><span class="badge expired">Expired</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Mendoza, Carlos</strong><br><span style="font-size: 0.75rem; color: var(--brandcolor-1);">ID: #1042</span></td>
+                            <td>Non-Student Monthly (₱750)</td>
+                            <td>Nov 14, 2026</td>
+                            <td>Member Rate (₱60)</td>
+                            <td><span class="badge active">Active</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Garcia, Patricia</strong><br><span style="font-size: 0.75rem; color: var(--brandcolor-1);">ID: #1055</span></td>
+                            <td>Student Monthly (₱700)</td>
+                            <td>Oct 20, 2026</td>
+                            <td>Member Rate (₱60)</td>
+                            <td><span class="badge active">Active</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </section>
+
+    </main>
+
+</body>
+</html>
