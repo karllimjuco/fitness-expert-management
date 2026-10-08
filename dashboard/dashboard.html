@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Guest & Day Pass</title>
+    <title>Guest &amp; Day Pass</title>
     <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -12,14 +12,14 @@
     <header class="navbar">
         <div class="navbar-brand">
             <img src="../assets/logo.jpg" alt="Staff Logo" class="logo-mark" />
-            <span>Guest & Day Pass</span>
+            <span>Guest &amp; Day Pass</span>
         </div>
         <div class="navbar-user">
             <div class="staff-pill">
                 <span class="staff-status-dot" aria-hidden="true"></span>
-                <span>Staff: <strong>Karl Lopez</strong></span>
+                <span>Staff: <strong id="staffNameDisplay">Staff</strong></span>
             </div>
-            <a href="../loginstaff.html" class="logout-link">Logout</a>
+            <a href="../loginstaff.html" id="logoutLink" class="logout-link">Logout</a>
         </div>
     </header>
 
@@ -36,10 +36,10 @@
             <div class="summary-card revenue">
                 <div class="label">
                     <span>Today's Revenue</span>
-                    <span class="card-badge">Daily Total</span>
+                    <button type="button" id="btnResetDay" class="reset-btn" title="Reset daily counters">Reset Day</button>
                 </div>
-                <div class="value">₱ 4,230</div>
-                <div class="card-note">+ Includes ₱980 from 14 Day Passes</div>
+                <div class="value" id="todayRevenueVal">₱ 4,230</div>
+                <div class="card-note" id="todayRevenueNote">+ Includes ₱980 from 14 Day Passes</div>
             </div>
             <div class="summary-card">
                 <div class="label">
@@ -54,8 +54,8 @@
                     <span>Guest Passes Today</span>
                     <span class="card-badge">Walk-ins</span>
                 </div>
-                <div class="value">14</div>
-                <div class="card-note">8 Non-Members (₱80) · 6 Members (₱60)</div>
+                <div class="value" id="guestPassesVal">14</div>
+                <div class="card-note" id="guestPassesNote">8 Non-Members (₱80) · 6 Members (₱60)</div>
             </div>
         </section>
 
@@ -79,7 +79,7 @@
                     </div>
                     <div class="balance-status-callout">
                         <span>Current Day Total:</span>
-                        <strong>₱ 4,230.00</strong>
+                        <strong id="dayTotalPill">₱ 4,230.00</strong>
                     </div>
                 </div>
 
@@ -107,9 +107,9 @@
                         </div>
 
                         <div>
-                            <!-- Single tap button (front-end only) -->
-                            <button type="button" class="tap-btn" title="Single tap to add ₱80 to today's earnings">
-                                 Tap to Add Non-Member (+₱80)
+                            <!-- Single tap button -->
+                            <button type="button" id="btnAddNonMember" class="tap-btn" title="Single tap to add ₱80 to today's earnings">
+                                Tap to Add Non-Member (+₱80)
                             </button>
                             <p class="tap-subtext">+ Adds ₱80.00 to current amount earned today</p>
                         </div>
@@ -136,9 +136,9 @@
                         </div>
 
                         <div>
-                            <!-- Single tap button (front-end only) -->
-                            <button type="button" class="tap-btn" title="Single tap to add ₱60 to today's earnings">
-                                 Tap to Add Member (+₱60)
+                            <!-- Single tap button -->
+                            <button type="button" id="btnAddMember" class="tap-btn" title="Single tap to add ₱60 to today's earnings">
+                                Tap to Add Member (+₱60)
                             </button>
                             <p class="tap-subtext">+ Adds ₱60.00 to current amount earned today</p>
                         </div>
@@ -151,16 +151,16 @@
             <div class="activity-box">
                 <div class="activity-header">
                     <span class="activity-title">Today's Activity</span>
-                    <span class="activity-summary-pill">14 passes logged today (₱980 total)</span>
+                    <span class="activity-summary-pill">Recent recorded passes</span>
                 </div>
 
                 <div class="activity-list">
                     <div class="activity-item">
                         <div class="activity-item-left">
-                            <div class="activity-icon">💵</div>
+                            <div class="activity-icon">PASS</div>
                             <div>
                                 <div class="activity-name">Non-Member Regular Day Pass</div>
-                                <div class="activity-time">Just now · Walk-in Visitor #14</div>
+                                <div class="activity-time">Walk-in Visitor</div>
                             </div>
                         </div>
                         <div class="activity-item-right">
@@ -171,10 +171,10 @@
 
                     <div class="activity-item">
                         <div class="activity-item-left">
-                            <div class="activity-icon">💵</div>
+                            <div class="activity-icon">PASS</div>
                             <div>
                                 <div class="activity-name">Member Regular Day Pass (ID #1088)</div>
-                                <div class="activity-time">18 minutes ago · Registered Member</div>
+                                <div class="activity-time">Registered Member</div>
                             </div>
                         </div>
                         <div class="activity-item-right">
@@ -185,10 +185,10 @@
 
                     <div class="activity-item">
                         <div class="activity-item-left">
-                            <div class="activity-icon">💵</div>
+                            <div class="activity-icon">PASS</div>
                             <div>
                                 <div class="activity-name">Non-Member Regular Day Pass</div>
-                                <div class="activity-time">42 minutes ago · Walk-in Visitor #13</div>
+                                <div class="activity-time">Walk-in Visitor</div>
                             </div>
                         </div>
                         <div class="activity-item-right">
@@ -199,10 +199,10 @@
 
                     <div class="activity-item">
                         <div class="activity-item-left">
-                            <div class="activity-icon">💵</div>
+                            <div class="activity-icon">PASS</div>
                             <div>
                                 <div class="activity-name">Member Regular Day Pass (ID #1045)</div>
-                                <div class="activity-time">1 hour ago · Registered Member</div>
+                                <div class="activity-time">Registered Member</div>
                             </div>
                         </div>
                         <div class="activity-item-right">
@@ -217,5 +217,6 @@
 
     </main>
 
+    <script src="app.js"></script>
 </body>
 </html>

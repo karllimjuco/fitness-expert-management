@@ -17,13 +17,41 @@
         <div class="navbar-user">
             <div class="staff-pill">
                 <span class="staff-status-dot" aria-hidden="true"></span>
-                <span>Staff: <strong>Karl Lopez</strong></span>
+                <span>Staff: <strong id="staffNameDisplay">Staff</strong></span>
             </div>
-            <a href="../loginstaff.html" class="logout-link">Logout</a>
+            <a href="../loginstaff.html" id="logoutLink" class="logout-link">Logout</a>
         </div>
     </header>
 
     <main class="page">
+
+        <!-- ===== Summary cards ===== -->
+        <section class="summary-grid">
+            <div class="summary-card revenue">
+                <div class="label">
+                    <span>Today's Revenue</span>
+                    <button type="button" id="btnResetDay" class="reset-btn" title="Reset daily counters">Reset Day</button>
+                </div>
+                <div class="value" id="todayRevenueVal">₱ 4,230</div>
+                <div class="card-note" id="todayRevenueNote">+ Includes ₱980 from 14 Day Passes</div>
+            </div>
+            <div class="summary-card">
+                <div class="label">
+                    <span>Total Members</span>
+                    <span class="card-badge">Active</span>
+                </div>
+                <div class="value">128</div>
+                <div class="card-note">112 active · 13 expiring soon</div>
+            </div>
+            <div class="summary-card">
+                <div class="label">
+                    <span>Guest Passes Today</span>
+                    <span class="card-badge">Walk-ins</span>
+                </div>
+                <div class="value" id="guestPassesVal">14</div>
+                <div class="card-note" id="guestPassesNote">8 Non-Members (₱80) · 6 Members (₱60)</div>
+            </div>
+        </section>
 
         <!-- Navigation Tabs (Pure HTML links) -->
         <nav class="tabs" aria-label="Dashboard Navigation">
@@ -59,11 +87,11 @@
                         <div class="member-type-toggle">
                             <label class="type-toggle-option">
                                 <input type="radio" name="membertype" value="student" checked />
-                                <span class="type-toggle-label">🎓 Student</span>
+                                <span class="type-toggle-label">Student</span>
                             </label>
                             <label class="type-toggle-option">
                                 <input type="radio" name="membertype" value="non-student" />
-                                <span class="type-toggle-label">💼 Non-Student</span>
+                                <span class="type-toggle-label">Non-Student</span>
                             </label>
                         </div>
                     </div>
@@ -96,5 +124,6 @@
 
     </main>
 
+    <script src="app.js"></script>
 </body>
 </html>

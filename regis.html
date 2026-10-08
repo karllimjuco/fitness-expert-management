@@ -10,18 +10,34 @@
     <main class="loginpage" aria-labelledby="login-heading">
         <h1 id="login-heading">Register</h1>
 
-        <form id="loginForm" action="loginstaff.html" method="GET">
+        <form id="regisForm" action="#" method="POST" novalidate>
             
             <div class="login glass">
 
+                <!-- Staff Name -->
+                <label for="staffName" class="sr-only">Staff Name</label>
+                <div class="input-wrapper user-wrapper">
+                    <input
+                        type="text"
+                        id="staffName"
+                        name="staffName"
+                        placeholder="staff name"
+                        maxlength="50"
+                        required
+                        aria-describedby="invalid-staffname"
+                    />
+                    <span class="input-icon user-icon" aria-hidden="true"></span>
+                </div>
+                <div id="invalid-staffname" class="error" aria-live="polite"></div>
+
+                <!-- Email -->
                 <label for="email" class="sr-only">Email</label>
                 <div class="input-wrapper mail-wrapper">
                     <input
                         type="email"
                         id="email"
-                        name="email"a
+                        name="email"
                         placeholder="email"
-                        minlength="8"
                         maxlength="50"
                         required
                         aria-describedby="invalid-email"
@@ -30,6 +46,7 @@
                 </div>
                 <div id="invalid-email" class="error" aria-live="polite"></div>
 
+                <!-- Username -->
                 <label for="username" class="sr-only">Username</label>
                 <div class="input-wrapper user-wrapper">
                     <input
@@ -37,8 +54,9 @@
                         id="username"
                         name="username"
                         placeholder="username"
-                        minlength="3"
+                        minlength="4"
                         maxlength="50"
+                        autocomplete="username"
                         required
                         aria-describedby="invalid-user"
                     />
@@ -46,6 +64,7 @@
                 </div>
                 <div id="invalid-user" class="error" aria-live="polite"></div>
 
+                <!-- Password -->
                 <label for="password" class="sr-only">Password</label>
                 <div class="input-wrapper lock-wrapper">
                     <input
@@ -53,9 +72,9 @@
                         id="password"
                         name="password"
                         placeholder="password"
-                        minlength="8"
+                        minlength="6"
                         maxlength="50"
-                        autocomplete="off"
+                        autocomplete="new-password"
                         required
                         aria-describedby="invalid-pass"
                     />
@@ -63,15 +82,26 @@
                 </div>
                 <div id="invalid-pass" class="error" aria-live="polite"></div>
 
-                <div id="same-user-pw" class="error" aria-live="polite"></div>
-            </div>
-
-            <div class="remember-me">
-                <div class="remember">
-                    <input type="checkbox" name="remember" id="remember">
-                    <label for="remember">remember me</label>
+                <!-- Confirm Password -->
+                <label for="confirmPassword" class="sr-only">Confirm Password</label>
+                <div class="input-wrapper lock-wrapper">
+                    <input
+                        type="password"
+                        id="confirmPassword"
+                        name="confirmPassword"
+                        placeholder="confirm password"
+                        minlength="6"
+                        maxlength="50"
+                        autocomplete="new-password"
+                        required
+                        aria-describedby="invalid-confirmpass"
+                    />
+                    <span class="input-icon lock-icon" aria-hidden="true"></span>
                 </div>
-                <a href="#" class="forgot">Forgot Password?</a>
+                <div id="invalid-confirmpass" class="error" aria-live="polite"></div>
+
+                <!-- Form-level Message -->
+                <div id="form-msg" class="error" style="text-align: center; margin-top: 0.5rem;" aria-live="polite"></div>
             </div>
 
             <div class="submit">
@@ -84,5 +114,146 @@
             <a href="loginstaff.html">Login</a>
         </div>
     </main>
+
+    <script src="AccountsDB.js"></script>
+    <script>
+        var regisForm = document.getElementById("regisForm");
+        var staffNameInput = document.getElementById("staffName");
+        var emailInput = document.getElementById("email");
+        var usernameInput = document.getElementById("username");
+        var passwordInput = document.getElementById("password");
+        var confirmPasswordInput = document.getElementById("confirmPassword");
+
+        var invalidStaffName = document.getElementById("invalid-staffname");
+        var invalidEmail = document.getElementById("invalid-email");
+        var invalidUser = document.getElementById("invalid-user");
+        var invalidPass = document.getElementById("invalid-pass");
+        var invalidConfirmPass = document.getElementById("invalid-confirmpass");
+        var formMsg = document.getElementById("form-msg");
+
+        // Clear error text as user types
+        staffNameInput.addEventListener("input", function() {
+            invalidStaffName.textContent = "";
+            formMsg.textContent = "";
+        });
+
+        emailInput.addEventListener("input", function() {
+            invalidEmail.textContent = "";
+            formMsg.textContent = "";
+        });
+
+        usernameInput.addEventListener("input", function() {
+            invalidUser.textContent = "";
+            formMsg.textContent = "";
+        });
+
+        passwordInput.addEventListener("input", function() {
+            invalidPass.textContent = "";
+            formMsg.textContent = "";
+        });
+
+        confirmPasswordInput.addEventListener("input", function() {
+            invalidConfirmPass.textContent = "";
+            formMsg.textContent = "";
+        });
+
+        regisForm.addEventListener("submit", function(e) {
+            e.preventDefault();
+
+            var staffName = staffNameInput.value.trim();
+            var email = emailInput.value.trim();
+            var username = usernameInput.value.trim();
+            var password = passwordInput.value;
+            var confirmPassword = confirmPasswordInput.value;
+            var hasError = false;
+
+            invalidStaffName.textContent = "";
+            invalidEmail.textContent = "";
+            invalidUser.textContent = "";
+            invalidPass.textContent = "";
+            invalidConfirmPass.textContent = "";
+            formMsg.textContent = "";
+
+            // Validate staff name
+            if (!staffName) {
+                invalidStaffName.textContent = "Please enter staff name.";
+                hasError = true;
+            }
+
+            // Validate email
+            if (!email) {
+                invalidEmail.textContent = "Please enter email.";
+                hasError = true;
+            }
+
+            // Validate username
+            if (!username) {
+                invalidUser.textContent = "Please enter username.";
+                hasError = true;
+            } else if (username.length < 4) {
+                invalidUser.textContent = "Username must be at least 4 characters.";
+                hasError = true;
+            } else {
+                // Check if username is already taken
+                var accounts = getAllAccounts();
+                for (var i = 0; i < accounts.length; i++) {
+                    if (accounts[i].username.toLowerCase() === username.toLowerCase()) {
+                        invalidUser.textContent = "Username is already taken.";
+                        hasError = true;
+                        break;
+                    }
+                }
+            }
+
+            // Validate password
+            if (!password) {
+                invalidPass.textContent = "Please enter password.";
+                hasError = true;
+            } else if (password.length < 6) {
+                invalidPass.textContent = "Password must be at least 6 characters.";
+                hasError = true;
+            }
+
+            // Validate confirm password
+            if (!confirmPassword) {
+                invalidConfirmPass.textContent = "Please confirm your password.";
+                hasError = true;
+            } else if (password !== confirmPassword) {
+                invalidConfirmPass.textContent = "Passwords do not match.";
+                hasError = true;
+            }
+
+            if (hasError) {
+                return;
+            }
+
+            // Save new account to localStorage
+            var stored = localStorage.getItem("gym_accounts");
+            var localAccounts = [];
+            if (stored) {
+                try {
+                    localAccounts = JSON.parse(stored);
+                } catch (err) {
+                    localAccounts = [];
+                }
+            }
+
+            localAccounts.push({
+                username: username,
+                password: password,
+                staffName: staffName,
+                email: email
+            });
+
+            localStorage.setItem("gym_accounts", JSON.stringify(localAccounts));
+
+            formMsg.style.color = "lightgreen";
+            formMsg.textContent = "Account created successfully. Redirecting to login...";
+
+            setTimeout(function() {
+                window.location.href = "loginstaff.html";
+            }, 1200);
+        });
+    </script>
 </body>
 </html>

@@ -1021,3 +1021,23 @@ select.form-control {
         padding: 1.5rem 1rem;
     }
 }
+
+/* Reset Day Button */
+.reset-btn {
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    font-family: inherit;
+    color: var(--brandcolor-1);
+    background: transparent;
+    border: 1px solid var(--brand-border);
+    border-radius: 1rem;
+    cursor: pointer;
+    transition: var(--def-transition);
+}
+
+.reset-btn:hover {
+    color: #ffffff;
+    border-color: var(--brand-focus-border);
+    background: rgba(255, 255, 255, 0.08);
+}

@@ -69,5 +69,70 @@
             <a href="regis.html">Register</a>
         </div>
     </main>
+
+    <script src="AccountsDB.js"></script>
+    <script>
+        var loginForm = document.getElementById("loginForm");
+        var usernameInput = document.getElementById("username");
+        var passwordInput = document.getElementById("password");
+        var invalidUser = document.getElementById("invalid-user");
+        var invalidPass = document.getElementById("invalid-pass");
+        var loginError = document.getElementById("same-user-pw");
+
+        // Clear error text as user types
+        usernameInput.addEventListener("input", function() {
+            invalidUser.textContent = "";
+            loginError.textContent = "";
+        });
+
+        passwordInput.addEventListener("input", function() {
+            invalidPass.textContent = "";
+            loginError.textContent = "";
+        });
+
+        loginForm.addEventListener("submit", function(e) {
+            e.preventDefault();
+
+            var username = usernameInput.value.trim();
+            var password = passwordInput.value;
+            var hasError = false;
+
+            invalidUser.textContent = "";
+            invalidPass.textContent = "";
+            loginError.textContent = "";
+
+            if (!username) {
+                invalidUser.textContent = "Please enter your username.";
+                hasError = true;
+            }
+
+            if (!password) {
+                invalidPass.textContent = "Please enter your password.";
+                hasError = true;
+            }
+
+            if (hasError) {
+                return;
+            }
+
+            // Check credentials against seed and registered accounts
+            var accounts = getAllAccounts();
+            var matchedAccount = null;
+
+            for (var i = 0; i < accounts.length; i++) {
+                if (accounts[i].username.toLowerCase() === username.toLowerCase() && accounts[i].password === password) {
+                    matchedAccount = accounts[i];
+                    break;
+                }
+            }
+
+            if (matchedAccount) {
+                sessionStorage.setItem("logged_staff_name", matchedAccount.staffName);
+                window.location.href = "dashboard/dashboard.html";
+            } else {
+                loginError.textContent = "Invalid username or password.";
+            }
+        });
+    </script>
 </body>
 </html>
