@@ -103,21 +103,19 @@
 
             </div>
 
-            <!-- Member Selection / Renewal Box -->
-            <div class="select-member-box">
-                <div class="select-member-title">Assign or Renew for Member</div>
-                <div class="select-member-form">
-                    <input type="text" class="form-control" placeholder="Search or select member name / ID..." />
-                    <select class="form-control">
-                        <option value="cash">Payment: Cash</option>
-                        <option value="gcash">Payment: GCash</option>
-                        <option value="card">Payment: Card</option>
-                    </select>
-                    <button type="button" class="save-member-btn" style="margin-top: 0; padding: 0.85rem 1rem;">Process Plan</button>
-                </div>
-            </div>
-                 <p id="planMessage" class="tap-subtext"></p>
-        </section>
+         
+
+        <!-- Modal Popup inside monthly.html -->
+<div id="planModal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="modalPlanTitle">Select Member</h3>
+            <button type="button" id="closeModalBtn" class="close-btn">&times;</button>
+        </div>
+        <p style="font-size: 0.85rem; color: #aaa;">Showing lifetime members with expired or missing monthly passes:</p>
+        <ul id="eligibleMembersList" class="member-select-list"></ul>
+    </div>
+</div>
 
     </main>
 

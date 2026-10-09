@@ -1,4 +1,4 @@
-// Shared logic for all four dashboard pages: authentication guard, logout, and persistent daily counters.
+// Shared logic for all four dashboard pages: authentication guard, logout, persistent daily counters, and monthly plan selection.
 
 (function() {
     // 1. Authentication check: redirect to login if no staff is logged in
@@ -24,8 +24,7 @@
         });
     }
 
-        // 4. Default daily state
-    // The base revenue and starting pass counts are placeholder demo numbers.
+    // 4. Default daily state
     var DEFAULTS = {
         baseRevenue: 3250,
         nonMemberCount: 8,
@@ -41,7 +40,6 @@
         } catch (e) {
             saved = {};
         }
-        // Use the saved value when it is a number, otherwise the default
         var data = {};
         for (var key in DEFAULTS) {
             data[key] = typeof saved[key] === "number" ? saved[key] : DEFAULTS[key];
@@ -53,7 +51,7 @@
         localStorage.setItem("gym_daily_counters", JSON.stringify(data));
     }
 
-        // Undo history: remembers which counter each tap changed, newest last
+    // Undo history: remembers which counter each tap changed, newest last
     function loadHistory() {
         try {
             return JSON.parse(localStorage.getItem("gym_undo_history")) || [];
@@ -107,7 +105,7 @@
         }
     }
 
-      // Adds one to a counter field, records it for undo, and refreshes the page
+    // Adds one to a counter field, records it for undo, and refreshes the UI
     function addOne(field) {
         var data = loadCounters();
         data[field] += 1;
@@ -135,7 +133,7 @@
         });
     }
 
-    // Monthly plan buttons (monthly.html)
+    // Monthly Plan & Modal Assignment Logic (monthly.html)
     function showPlanMessage(text) {
         var msg = document.getElementById("planMessage");
         if (msg) {
@@ -143,26 +141,118 @@
         }
     }
 
+    // Initialize default seed members if localStorage is empty
+    (function initDefaultMembers() {
+        if (!localStorage.getItem("gym_members")) {
+            var defaultMembers = [
+                { id: "#1024", name: "Faizan Fayyaz", contact: "0917-111-2222", lifetimeMember: true, monthlyPlan: "Student Monthly", planExpiry: "2026-10-03" },
+                { id: "#1031", name: "John Lloyd Cruz", contact: "0917-333-4444", lifetimeMember: true, monthlyPlan: "Regular Monthly", planExpiry: "2026-09-28" },
+                { id: "#1019", name: "Bea Alonzo", contact: "0917-555-6666", lifetimeMember: true, monthlyPlan: "None", planExpiry: null }
+            ];
+            localStorage.setItem("gym_members", JSON.stringify(defaultMembers));
+        }
+    })();
+
+    // Filter eligible lifetime members (must be registered lifetime member with no active plan or an expired plan)
+    function isEligibleForMonthlyPlan(member) {
+        if (!member.lifetimeMember) return false;
+        if (!member.planExpiry || member.monthlyPlan === "None") return true;
+
+        var today = new Date().toISOString().split("T")[0];
+        return member.planExpiry < today;
+    }
+
+    function openPlanModal(planType, price) {
+        var members = JSON.parse(localStorage.getItem("gym_members")) || [];
+        var eligibleMembers = members.filter(isEligibleForMonthlyPlan);
+        var listEl = document.getElementById("eligibleMembersList");
+        var modalTitle = document.getElementById("modalPlanTitle");
+        var modal = document.getElementById("planModal");
+
+        if (!listEl || !modal) return;
+
+        modalTitle.textContent = "Assign " + planType + " (₱" + price + ")";
+        listEl.innerHTML = "";
+
+        if (eligibleMembers.length === 0) {
+            listEl.innerHTML = "<li style='padding:1rem; text-align:center; color:#888;'>No eligible members found. Register new members first in 'Add Member'.</li>";
+        } else {
+            eligibleMembers.forEach(function(member) {
+                var li = document.createElement("li");
+                li.className = "member-item-select";
+                li.innerHTML = `
+                    <div>
+                        <strong>${member.name}</strong> <small style="color:#aaa;">(${member.id})</small>
+                        <div style="font-size:0.75rem; color:#888;">${member.planExpiry ? "Expired on: " + member.planExpiry : "No Active Monthly Pass"}</div>
+                    </div>
+                    <button type="button" class="select-btn">Select</button>
+                `;
+
+                li.querySelector("button").addEventListener("click", function() {
+                    assignMonthlyPass(member.id, planType, price);
+                });
+
+                listEl.appendChild(li);
+            });
+        }
+
+        modal.style.display = "flex";
+    }
+
+    function assignMonthlyPass(memberId, planType, price) {
+        var members = JSON.parse(localStorage.getItem("gym_members")) || [];
+        
+        var expiryDate = new Date();
+        expiryDate.setDate(expiryDate.getDate() + 30);
+        var expiryStr = expiryDate.toISOString().split("T")[0];
+
+        for (var i = 0; i < members.length; i++) {
+            if (members[i].id === memberId) {
+                members[i].monthlyPlan = planType;
+                members[i].planExpiry = expiryStr;
+                break;
+            }
+        }
+
+        localStorage.setItem("gym_members", JSON.stringify(members));
+
+        var modal = document.getElementById("planModal");
+        if (modal) modal.style.display = "none";
+
+        showPlanMessage("Activated " + planType + " for " + memberId + " (Expires: " + expiryStr + ")");
+
+        if (planType.includes("Student")) {
+            addOne("studentPlanCount");
+        } else {
+            addOne("regularPlanCount");
+        }
+    }
+
+    // Attach event listeners for plan buttons
     var btnStudentPlan = document.getElementById("btnStudentPlan");
     if (btnStudentPlan) {
         btnStudentPlan.addEventListener("click", function() {
-            addOne("studentPlanCount");
-            showPlanMessage("Student plan recorded (₱700)");
+            openPlanModal("Student Plan", 700);
         });
     }
 
     var btnRegularPlan = document.getElementById("btnRegularPlan");
     if (btnRegularPlan) {
         btnRegularPlan.addEventListener("click", function() {
-            addOne("regularPlanCount");
-            showPlanMessage("Regular plan recorded (₱750)");
+            openPlanModal("Regular Plan", 750);
         });
     }
 
-       // Undo and Reset buttons (all dashboard pages)
+    var closeModalBtn = document.getElementById("closeModalBtn");
+    if (closeModalBtn) {
+        closeModalBtn.addEventListener("click", function() {
+            document.getElementById("planModal").style.display = "none";
+        });
+    }
+
+    // Undo and Reset buttons (all dashboard pages)
     var btnResetDay = document.getElementById("btnResetDay");
     if (btnResetDay) {
-        // Create the Undo button and group it with Reset Day, so no HTML edits are needed
         var btnUndo = document.createElement("button");
         btnUndo.type = "button";
         btnUndo.id = "btnUndo";
@@ -196,7 +286,6 @@
             saveHistory(history);
             updateUI();
 
-            // Shown until the next update replaces the note
             if (revNote) {
                 revNote.textContent = "Removed: " + FIELD_LABELS[field];
             }
