@@ -1,5 +1,3 @@
-// A browser cannot read a .txt file directly when opened via file:// protocol due to security restrictions.
-// Using a JavaScript file allows the seed accounts to load cleanly in local browser environments without a server.
 
 var SEED_ACCOUNTS = [
     {
@@ -8,9 +6,9 @@ var SEED_ACCOUNTS = [
         staffName: "Karl Lopez"
     },
     {
-        username: "maria02",
+        username: "marco",
         password: "password123",
-        staffName: "Maria Santos"
+        staffName: "Val Marco"
     },
     {
         username: "totle03",
