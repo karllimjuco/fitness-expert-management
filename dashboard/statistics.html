@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Statistics</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="extra.css" />
+</head>
+<body>
+
+    <!-- ===== Navbar (Matches loginstaff.html aesthetic) ===== -->
+    <header class="navbar">
+        <div class="navbar-brand">
+            <img src="../assets/logo.jpg" alt="Staff Logo" class="logo-mark" />
+            <span>Statistics</span>
+        </div>
+        <div class="navbar-user">
+            <div class="staff-pill">
+                <span class="staff-status-dot" aria-hidden="true"></span>
+                <span>Staff: <strong id="staffNameDisplay">Staff</strong></span>
+            </div>
+            <a href="../loginstaff.html" id="logoutLink" class="logout-link">Logout</a>
+        </div>
+    </header>
+
+    <main class="page">
+
+        <!-- Sample data notice -->
+        <div id="sampleDataNotice" class="gx-sample-notice" style="display: none;">
+            <span>Showing sample data</span>
+        </div>
+
+        <!-- ===== Summary cards ===== -->
+        <section class="summary-grid">
+            <!-- Card 1: Lifetime Revenue -->
+            <div class="summary-card revenue">
+                <div class="label">
+                    <span>Lifetime Revenue</span>
+                    <span class="card-badge">All time</span>
+                </div>
+                <div class="value" id="lifetimeRevenueVal">₱ 0</div>
+                <div class="card-note" id="lifetimeRevenueNote">Day passes ₱0 · Monthly plans ₱0 · Memberships ₱0</div>
+            </div>
+
+            <!-- Card 2: Total Members (filled by app.js) -->
+            <div class="summary-card">
+                <div class="label">
+                    <span>Total Members</span>
+                    <span class="card-badge">Active</span>
+                </div>
+                <div class="value">0</div>
+                <div class="card-note">0 active · 0 expiring soon</div>
+            </div>
+
+            <!-- Card 3: New Members This Month -->
+            <div class="summary-card">
+                <div class="label">
+                    <span>New Members This Month</span>
+                    <span class="card-badge">Monthly trend</span>
+                </div>
+                <div class="value" id="newMembersMonthVal">0</div>
+                <div class="card-note" id="newMembersMonthNote">Last month: 0, no change from the month before</div>
+            </div>
+        </section>
+
+        <!-- ===== Navigation Tabs ===== -->
+        <nav class="tabs" aria-label="Dashboard Navigation">
+            <a href="dashboard.html" class="tab">Guest &amp; Day Pass</a>
+            <a href="monthly.html" class="tab">Monthly Plans</a>
+            <a href="members.html" class="tab">Members List</a>
+            <a href="addmember.html" class="tab">Add Member</a>
+            <a href="statistics.html" class="tab active">Statistics</a>
+        </nav>
+
+        <!-- Section a: Member growth (line chart) -->
+        <section class="panel gx-panel-section">
+            <div class="gx-panel-header">
+                <div>
+                    <h2 class="panel-title">Member Growth</h2>
+                    <p class="panel-subtitle" style="margin-bottom: 0;">Registration and cumulative member progression over the last 6 calendar months</p>
+                </div>
+                <div class="gx-btn-group" role="group" aria-label="Member series selector">
+                    <button type="button" class="gx-btn active" id="btnMemberNew">New members per month</button>
+                    <button type="button" class="gx-btn" id="btnMemberTotal">Total members</button>
+                </div>
+            </div>
+
+            <div class="gx-chart-box" id="memberGrowthBox"></div>
+            <div class="gx-chart-meta" id="memberGrowthMeta">Trend: Flat</div>
+            <div class="gx-text-alt" id="memberGrowthAlt"></div>
+        </section>
+
+        <!-- Section b: Revenue over time (line chart) -->
+        <section class="panel gx-panel-section">
+            <div class="gx-panel-header">
+                <div>
+                    <h2 class="panel-title">Revenue Over Time</h2>
+                    <p class="panel-subtitle" style="margin-bottom: 0;">Daily earnings across all gym pass, plan, and membership transactions</p>
+                </div>
+                <div class="gx-btn-group" role="group" aria-label="Revenue date range selector">
+                    <button type="button" class="gx-btn" id="btnRev7">Last 7 days</button>
+                    <button type="button" class="gx-btn active" id="btnRev30">Last 30 days</button>
+                </div>
+            </div>
+
+            <div class="gx-chart-box" id="revTimeBox"></div>
+            <div class="gx-chart-meta" id="revTimeMeta">Average daily revenue: ₱ 0</div>
+            <div class="gx-text-alt" id="revTimeAlt"></div>
+        </section>
+
+        <!-- Section c: Revenue by type -->
+        <section class="panel gx-panel-section">
+            <h2 class="panel-title">Revenue By Type</h2>
+            <p class="panel-subtitle">Breakdown of lifetime earnings across pass categories</p>
+
+            <div class="gx-bars-list" id="revenueTypeBars"></div>
+            <div class="gx-text-alt" id="revenueTypeAlt" style="margin-top: 0.75rem;"></div>
+        </section>
+
+        <!-- Section d: Plan health -->
+        <section class="panel gx-panel-section">
+            <h2 class="panel-title">Plan Health</h2>
+            <p class="panel-subtitle">Status overview of member subscription plans and upcoming renewals</p>
+
+            <div class="gx-status-cards" id="planHealthCards"></div>
+
+            <div class="gx-expiring-box">
+                <div class="gx-expiring-title">Members Expiring Soon</div>
+                <ul class="gx-expiring-list" id="expiringSoonList"></ul>
+            </div>
+
+            <div class="gx-ratio-note" id="studentRatioNote">Student members: 0, Non-Student members: 0</div>
+        </section>
+
+        <!-- Section e: Busiest days -->
+        <section class="panel gx-panel-section">
+            <h2 class="panel-title">Busiest Days</h2>
+            <p class="panel-subtitle">Total day passes issued by day of the week across all recorded history</p>
+
+            <div class="gx-chart-box" id="busiestDaysBox"></div>
+            <div class="gx-text-alt" id="busiestDaysAlt" style="margin-top: 0.75rem;"></div>
+        </section>
+
+        <!-- Section f: Staff activity -->
+        <section class="panel gx-panel-section">
+            <h2 class="panel-title">Staff Activity</h2>
+            <p class="panel-subtitle">Recorded entries and cumulative revenue collected per staff member</p>
+
+            <div class="table-responsive">
+                <table class="gx-table">
+                    <thead>
+                        <tr>
+                            <th>Staff Name</th>
+                            <th>Recorded Entries</th>
+                            <th>Total Revenue</th>
+                        </tr>
+                    </thead>
+                    <tbody id="staffActivityBody"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Section g: Demo data loader -->
+        <section class="panel gx-panel-section">
+            <h2 class="panel-title">Sample Data Generator</h2>
+            <p class="panel-subtitle">Populate historical records for testing and charts evaluation</p>
+
+            <div class="gx-demo-box">
+                <p class="gx-demo-desc">
+                    Replaces members and transactions with 6 months of sample registrations, plan renewals, and day passes. Staff accounts are preserved.
+                </p>
+                <button type="button" class="gx-demo-btn" id="btnLoadDemo">Load demo data</button>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="app.js"></script>
+    <script src="statistics.js"></script>
+</body>
+</html>

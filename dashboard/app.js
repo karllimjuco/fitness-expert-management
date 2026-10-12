@@ -71,6 +71,96 @@
         regularPlanCount: "Regular Plan (₱750)"
     };
 
+    // Shared storage and calculation helpers
+    function loadMembers() {
+        var raw = localStorage.getItem("gym_members");
+        if (!raw) return [];
+        try {
+            return JSON.parse(raw) || [];
+        } catch (e) {
+            return [];
+        }
+    }
+
+    function saveMembers(members) {
+        localStorage.setItem("gym_members", JSON.stringify(members || []));
+    }
+
+    function loadLog() {
+        var raw = localStorage.getItem("gym_transactions");
+        if (!raw) return [];
+        try {
+            return JSON.parse(raw) || [];
+        } catch (e) {
+            return [];
+        }
+    }
+
+    function saveLog(log) {
+        localStorage.setItem("gym_transactions", JSON.stringify(log || []));
+    }
+
+    function toDateString(d) {
+        if (!d) return "";
+        var year = d.getFullYear();
+        var month = String(d.getMonth() + 1).padStart(2, "0");
+        var day = String(d.getDate()).padStart(2, "0");
+        return year + "-" + month + "-" + day;
+    }
+
+    function todayString() {
+        return toDateString(new Date());
+    }
+
+    function parseDate(str) {
+        if (!str) return new Date();
+        var parts = String(str).split("-");
+        if (parts.length === 3) {
+            var y = parseInt(parts[0], 10);
+            var m = parseInt(parts[1], 10) - 1;
+            var d = parseInt(parts[2], 10);
+            return new Date(y, m, d);
+        }
+        return new Date(str);
+    }
+
+    function addDays(d, days) {
+        var dateObj = typeof d === "string" ? parseDate(d) : new Date(d.getTime());
+        dateObj.setDate(dateObj.getDate() + days);
+        return dateObj;
+    }
+
+    function formatDate(dateStr) {
+        if (!dateStr) return "";
+        var d = typeof dateStr === "string" ? parseDate(dateStr) : dateStr;
+        if (isNaN(d.getTime())) return "";
+        var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        return months[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear();
+    }
+
+    function peso(amount) {
+        var num = typeof amount === "number" ? amount : parseFloat(amount) || 0;
+        return "₱ " + Math.round(num).toLocaleString();
+    }
+
+    function getPlanStatus(member) {
+        if (!member) return "None";
+        var plan = member.planType || member.monthlyPlan;
+        if (!plan || plan === "None" || !member.planExpiry) {
+            return "None";
+        }
+        var today = todayString();
+        var expiry = member.planExpiry;
+        if (expiry < today) {
+            return "Expired";
+        }
+        var expiringCutoff = toDateString(addDays(new Date(), 7));
+        if (expiry <= expiringCutoff) {
+            return "Expiring Soon";
+        }
+        return "Active";
+    }
+
     function updateUI() {
         var data = loadCounters();
         var passesCount = data.nonMemberCount + data.memberCount;
@@ -102,6 +192,28 @@
         var dayTotalPill = document.getElementById("dayTotalPill");
         if (dayTotalPill) {
             dayTotalPill.textContent = "₱ " + totalRevenue.toLocaleString() + ".00";
+        }
+
+        // Fill Total Members on the second summary card across pages
+        var members = loadMembers();
+        var summaryCards = document.querySelectorAll(".summary-card");
+        if (summaryCards.length >= 2) {
+            var card2 = summaryCards[1];
+            var valEl = card2.querySelector(".value");
+            if (valEl) {
+                valEl.textContent = members.length;
+            }
+            var noteEl = card2.querySelector(".card-note");
+            if (noteEl) {
+                var activeCount = 0;
+                var expiringCount = 0;
+                members.forEach(function(m) {
+                    var s = getPlanStatus(m);
+                    if (s === "Active") activeCount++;
+                    else if (s === "Expiring Soon") expiringCount++;
+                });
+                noteEl.textContent = activeCount + " active · " + expiringCount + " expiring soon";
+            }
         }
     }
 
@@ -307,4 +419,20 @@
 
     // Initial render
     updateUI();
+
+    // Expose shared gym data helpers for statistics and other modules
+    window.gymData = {
+        loadMembers: loadMembers,
+        saveMembers: saveMembers,
+        loadLog: loadLog,
+        saveLog: saveLog,
+        getPlanStatus: getPlanStatus,
+        todayString: todayString,
+        toDateString: toDateString,
+        parseDate: parseDate,
+        addDays: addDays,
+        formatDate: formatDate,
+        peso: peso,
+        refresh: updateUI
+    };
 })();
