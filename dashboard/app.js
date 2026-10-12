@@ -230,24 +230,76 @@
         updateUI();
     }
 
-   // Day pass buttons (dashboard.html)
-function confirmPass() {
-    if (confirm("Go to the Add Member page?")) {
-        window.location.href = "addmember.html";
+ // Day pass buttons (dashboard.html)
+function openDayPassModal(label, price, field) {
+    var members = loadMembers();
+    var modal = document.getElementById("dayPassModal");
+
+    if (!modal) {
+        modal = document.createElement("div");
+        modal.id = "dayPassModal";
+        modal.style.cssText = "display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.65);align-items:center;justify-content:center;z-index:1000;";
+        modal.innerHTML =
+            '<div style="background:#1b1b1b;border:1px solid #2c2c2c;border-radius:14px;width:560px;max-width:92%;max-height:85vh;overflow-y:auto;padding:28px 32px;color:#fff;">' +
+                '<div style="display:flex;justify-content:space-between;align-items:flex-start;">' +
+                    '<h3 id="dayPassTitle" style="margin:0;font-size:1.6rem;font-weight:700;"></h3>' +
+                    '<button type="button" id="dayPassClose" style="background:none;border:none;color:#fff;font-size:1.8rem;line-height:1;cursor:pointer;">&times;</button>' +
+                '</div>' +
+                '<p id="dayPassSub" style="margin:10px 0 18px;color:#9a9a9a;"></p>' +
+                '<ul id="dayPassList" style="list-style:none;margin:0;padding:0;"></ul>' +
+            '</div>';
+        document.body.appendChild(modal);
+
+        modal.querySelector("#dayPassClose").addEventListener("click", function() {
+            modal.style.display = "none";
+        });
+        modal.addEventListener("click", function(e) {
+            if (e.target === modal) modal.style.display = "none";
+        });
     }
-    // Cancel: nothing happens
+
+    document.getElementById("dayPassTitle").textContent = "Assign " + label + " (₱" + price + ")";
+    document.getElementById("dayPassSub").textContent = "Select the member for this day pass:";
+
+    var listEl = document.getElementById("dayPassList");
+    listEl.innerHTML = "";
+
+    members.forEach(function(member, i) {
+        var sub = member.planExpiry ? "Expired on: " + member.planExpiry : "No Active Monthly Pass";
+        var li = document.createElement("li");
+        li.style.cssText = "display:flex;justify-content:space-between;align-items:center;padding:16px 0;" +
+            (i < members.length - 1 ? "border-bottom:1px solid #2c2c2c;" : "");
+        li.innerHTML =
+            '<div>' +
+                '<div style="font-size:1.25rem;font-weight:700;">' + member.name +
+                    ' <span style="font-size:1rem;font-weight:400;color:#9a9a9a;">(' + member.id + ')</span></div>' +
+                '<div style="font-size:0.95rem;color:#8a8a8a;margin-top:4px;">' + sub + '</div>' +
+            '</div>' +
+            '<button type="button" style="background:#c8c8c8;color:#fff;border:none;border-radius:8px;padding:10px 22px;font-size:1rem;font-weight:700;cursor:pointer;">Select</button>';
+
+        li.querySelector("button").addEventListener("click", function() {
+            modal.style.display = "none";
+            addOne(field);
+        });
+        listEl.appendChild(li);
+    });
+
+    modal.style.display = "flex";
 }
 
 var btnAddNonMember = document.getElementById("btnAddNonMember");
 if (btnAddNonMember) {
-    btnAddNonMember.addEventListener("click", confirmPass);
+    btnAddNonMember.addEventListener("click", function() {
+        openDayPassModal("Non-Member Day Pass", 80, "nonMemberCount");
+    });
 }
 
 var btnAddMember = document.getElementById("btnAddMember");
 if (btnAddMember) {
-    btnAddMember.addEventListener("click", confirmPass);
+    btnAddMember.addEventListener("click", function() {
+        openDayPassModal("Member Day Pass", 60, "memberCount");
+    });
 }
-
     // Monthly Plan & Modal Assignment Logic (monthly.html)
     function showPlanMessage(text) {
         var msg = document.getElementById("planMessage");
