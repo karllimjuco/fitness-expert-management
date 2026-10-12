@@ -230,7 +230,9 @@
         updateUI();
     }
 
- // Day pass buttons (dashboard.html)
+// Day pass buttons (dashboard.html)
+
+// ----- Member popup (pick a registered member) -----
 function openDayPassModal(label, price, field) {
     var members = loadMembers();
     var modal = document.getElementById("dayPassModal");
@@ -287,10 +289,90 @@ function openDayPassModal(label, price, field) {
     modal.style.display = "flex";
 }
 
+// ----- Non-Member popup (name + phone/email) -----
+function openNonMemberModal() {
+    var modal = document.getElementById("nonMemberModal");
+
+    if (!modal) {
+        modal = document.createElement("div");
+        modal.id = "nonMemberModal";
+        modal.style.cssText = "display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.65);align-items:center;justify-content:center;z-index:1000;";
+
+        var inputStyle = "width:100%;box-sizing:border-box;background:#111;border:1px solid #2c2c2c;border-radius:8px;color:#fff;padding:12px 14px;font-size:1rem;margin-top:6px;";
+        var labelStyle = "display:block;color:#9a9a9a;font-size:0.95rem;margin-top:16px;";
+
+        modal.innerHTML =
+            '<div style="background:#1b1b1b;border:1px solid #2c2c2c;border-radius:14px;width:480px;max-width:92%;padding:28px 32px;color:#fff;">' +
+                '<div style="display:flex;justify-content:space-between;align-items:flex-start;">' +
+                    '<h3 style="margin:0;font-size:1.6rem;font-weight:700;">Non-Member Day Pass (₱80)</h3>' +
+                    '<button type="button" id="nmClose" style="background:none;border:none;color:#fff;font-size:1.8rem;line-height:1;cursor:pointer;">&times;</button>' +
+                '</div>' +
+                '<p style="margin:10px 0 0;color:#9a9a9a;">Enter the guest\'s details to log this pass.</p>' +
+
+                '<label style="' + labelStyle + '">Full Name' +
+                    '<input type="text" id="nmName" placeholder="e.g. Juan Dela Cruz" style="' + inputStyle + '">' +
+                '</label>' +
+
+                '<label style="' + labelStyle + '">Phone Number or Email' +
+                    '<input type="text" id="nmContact" placeholder="0917-123-4567 or name@email.com" style="' + inputStyle + '">' +
+                '</label>' +
+
+                '<p id="nmError" style="color:#ff6b6b;font-size:0.9rem;margin:12px 0 0;min-height:1.2em;"></p>' +
+
+                '<button type="button" id="nmSubmit" style="width:100%;margin-top:12px;background:#fff;color:#111;border:none;border-radius:999px;padding:14px;font-size:1rem;font-weight:700;cursor:pointer;">Add Pass (+₱80)</button>' +
+            '</div>';
+        document.body.appendChild(modal);
+
+        function closeIt() { modal.style.display = "none"; }
+        modal.querySelector("#nmClose").addEventListener("click", closeIt);
+        modal.addEventListener("click", function(e) {
+            if (e.target === modal) closeIt();
+        });
+
+        modal.querySelector("#nmSubmit").addEventListener("click", function() {
+            var name = document.getElementById("nmName").value.trim();
+            var contact = document.getElementById("nmContact").value.trim();
+            var errEl = document.getElementById("nmError");
+
+            if (!name) {
+                errEl.textContent = "Please enter the guest's name.";
+                return;
+            }
+            if (!contact) {
+                errEl.textContent = "Please enter a phone number or email.";
+                return;
+            }
+
+            var isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact);
+            var isPhone = /^[0-9+\-\s()]{7,}$/.test(contact);
+            if (!isEmail && !isPhone) {
+                errEl.textContent = "Enter a valid phone number or email.";
+                return;
+            }
+
+            var guests = [];
+            try { guests = JSON.parse(localStorage.getItem("gym_guests")) || []; } catch (e) {}
+            guests.push({ name: name, contact: contact, date: new Date().toISOString() });
+            localStorage.setItem("gym_guests", JSON.stringify(guests));
+
+            closeIt();
+            addOne("nonMemberCount");
+        });
+    }
+
+    document.getElementById("nmName").value = "";
+    document.getElementById("nmContact").value = "";
+    document.getElementById("nmError").textContent = "";
+
+    modal.style.display = "flex";
+    document.getElementById("nmName").focus();
+}
+
+// ----- Button handlers -----
 var btnAddNonMember = document.getElementById("btnAddNonMember");
 if (btnAddNonMember) {
     btnAddNonMember.addEventListener("click", function() {
-        openDayPassModal("Non-Member Day Pass", 80, "nonMemberCount");
+        openNonMemberModal();
     });
 }
 
