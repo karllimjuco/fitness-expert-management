@@ -230,20 +230,23 @@
         updateUI();
     }
 
-    // Day pass buttons (dashboard.html)
-    var btnAddNonMember = document.getElementById("btnAddNonMember");
-    if (btnAddNonMember) {
-        btnAddNonMember.addEventListener("click", function() {
-            addOne("nonMemberCount");
-        });
+   // Day pass buttons (dashboard.html)
+function confirmPass() {
+    if (confirm("Go to the Add Member page?")) {
+        window.location.href = "addmember.html";
     }
+    // Cancel: nothing happens
+}
 
-    var btnAddMember = document.getElementById("btnAddMember");
-    if (btnAddMember) {
-        btnAddMember.addEventListener("click", function() {
-            addOne("memberCount");
-        });
-    }
+var btnAddNonMember = document.getElementById("btnAddNonMember");
+if (btnAddNonMember) {
+    btnAddNonMember.addEventListener("click", confirmPass);
+}
+
+var btnAddMember = document.getElementById("btnAddMember");
+if (btnAddMember) {
+    btnAddMember.addEventListener("click", confirmPass);
+}
 
     // Monthly Plan & Modal Assignment Logic (monthly.html)
     function showPlanMessage(text) {
@@ -272,7 +275,7 @@
 
         var today = new Date().toISOString().split("T")[0];
         return member.planExpiry < today;
-    }
+    }   
 
     function openPlanModal(planType, price) {
         var members = JSON.parse(localStorage.getItem("gym_members")) || [];

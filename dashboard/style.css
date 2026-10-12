@@ -34,6 +34,7 @@
     --danger-text: #f87171;
 }
 
+
 body {
     background: linear-gradient(135deg, rgba(10, 13, 18, 0.88), rgba(15, 20, 28, 0.94)), url("../assets/staffbackground.jpg");
     background-repeat: no-repeat;
@@ -491,6 +492,7 @@ body {
 .pass-features li span {
     color: #ffffff;
 }
+
 
 /* SINGLE TAP ADD BUTTON */
 .tap-btn {
@@ -1106,4 +1108,24 @@ select.form-control {
     border-radius: 6px;
     cursor: pointer;
     font-weight: bold;
+}
+
+.activity-list {
+    max-height: 320px;
+    overflow-y: scroll;
+    padding-right: 8px;
+    scrollbar-width: thin;
+    scrollbar-color: white gray;
+}
+
+.activity-list {
+    max-height: 320px;
+    overflow-y: scroll;
+    padding-right: 8px;
+     scrollbar-width: auto;
+    scrollbar-color: #22c55e #2a2e38;
+}
+
+.activity-list::-webkit-scrollbar-button {
+    display: none;
 }
