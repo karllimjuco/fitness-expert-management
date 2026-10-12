@@ -216,6 +216,7 @@ body {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
+
 .loginpage input:-webkit-autofill:focus {
     border: 2px solid var(--brand-focus-border);
     -webkit-box-shadow: 0 0 0 1000px var(--brand-bg) inset, var(--brand-focus-shadow);
@@ -231,6 +232,7 @@ body {
     background-image: none;
     transition: background-color 5000s ease-in-out 0s;
 }
+
 
 @media screen and (max-width: 768px) {
     .loginpage {
