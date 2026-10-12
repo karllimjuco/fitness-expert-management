@@ -71,6 +71,96 @@
         regularPlanCount: "Regular Plan (₱750)"
     };
 
+    // Shared storage and calculation helpers
+    function loadMembers() {
+        var raw = localStorage.getItem("gym_members");
+        if (!raw) return [];
+        try {
+            return JSON.parse(raw) || [];
+        } catch (e) {
+            return [];
+        }
+    }
+
+    function saveMembers(members) {
+        localStorage.setItem("gym_members", JSON.stringify(members || []));
+    }
+
+    function loadLog() {
+        var raw = localStorage.getItem("gym_transactions");
+        if (!raw) return [];
+        try {
+            return JSON.parse(raw) || [];
+        } catch (e) {
+            return [];
+        }
+    }
+
+    function saveLog(log) {
+        localStorage.setItem("gym_transactions", JSON.stringify(log || []));
+    }
+
+    function toDateString(d) {
+        if (!d) return "";
+        var year = d.getFullYear();
+        var month = String(d.getMonth() + 1).padStart(2, "0");
+        var day = String(d.getDate()).padStart(2, "0");
+        return year + "-" + month + "-" + day;
+    }
+
+    function todayString() {
+        return toDateString(new Date());
+    }
+
+    function parseDate(str) {
+        if (!str) return new Date();
+        var parts = String(str).split("-");
+        if (parts.length === 3) {
+            var y = parseInt(parts[0], 10);
+            var m = parseInt(parts[1], 10) - 1;
+            var d = parseInt(parts[2], 10);
+            return new Date(y, m, d);
+        }
+        return new Date(str);
+    }
+
+    function addDays(d, days) {
+        var dateObj = typeof d === "string" ? parseDate(d) : new Date(d.getTime());
+        dateObj.setDate(dateObj.getDate() + days);
+        return dateObj;
+    }
+
+    function formatDate(dateStr) {
+        if (!dateStr) return "";
+        var d = typeof dateStr === "string" ? parseDate(dateStr) : dateStr;
+        if (isNaN(d.getTime())) return "";
+        var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        return months[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear();
+    }
+
+    function peso(amount) {
+        var num = typeof amount === "number" ? amount : parseFloat(amount) || 0;
+        return "₱ " + Math.round(num).toLocaleString();
+    }
+
+    function getPlanStatus(member) {
+        if (!member) return "None";
+        var plan = member.planType || member.monthlyPlan;
+        if (!plan || plan === "None" || !member.planExpiry) {
+            return "None";
+        }
+        var today = todayString();
+        var expiry = member.planExpiry;
+        if (expiry < today) {
+            return "Expired";
+        }
+        var expiringCutoff = toDateString(addDays(new Date(), 7));
+        if (expiry <= expiringCutoff) {
+            return "Expiring Soon";
+        }
+        return "Active";
+    }
+
     function updateUI() {
         var data = loadCounters();
         var passesCount = data.nonMemberCount + data.memberCount;
@@ -103,6 +193,28 @@
         if (dayTotalPill) {
             dayTotalPill.textContent = "₱ " + totalRevenue.toLocaleString() + ".00";
         }
+
+        // Fill Total Members on the second summary card across pages
+        var members = loadMembers();
+        var summaryCards = document.querySelectorAll(".summary-card");
+        if (summaryCards.length >= 2) {
+            var card2 = summaryCards[1];
+            var valEl = card2.querySelector(".value");
+            if (valEl) {
+                valEl.textContent = members.length;
+            }
+            var noteEl = card2.querySelector(".card-note");
+            if (noteEl) {
+                var activeCount = 0;
+                var expiringCount = 0;
+                members.forEach(function(m) {
+                    var s = getPlanStatus(m);
+                    if (s === "Active") activeCount++;
+                    else if (s === "Expiring Soon") expiringCount++;
+                });
+                noteEl.textContent = activeCount + " active · " + expiringCount + " expiring soon";
+            }
+        }
     }
 
     // Adds one to a counter field, records it for undo, and refreshes the UI
@@ -118,24 +230,76 @@
         updateUI();
     }
 
-   // Day pass buttons (dashboard.html)
-function confirmPass() {
-    if (confirm("Go to the Add Member page?")) {
-        window.location.href = "addmember.html";
+ // Day pass buttons (dashboard.html)
+function openDayPassModal(label, price, field) {
+    var members = loadMembers();
+    var modal = document.getElementById("dayPassModal");
+
+    if (!modal) {
+        modal = document.createElement("div");
+        modal.id = "dayPassModal";
+        modal.style.cssText = "display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.65);align-items:center;justify-content:center;z-index:1000;";
+        modal.innerHTML =
+            '<div style="background:#1b1b1b;border:1px solid #2c2c2c;border-radius:14px;width:560px;max-width:92%;max-height:85vh;overflow-y:auto;padding:28px 32px;color:#fff;">' +
+                '<div style="display:flex;justify-content:space-between;align-items:flex-start;">' +
+                    '<h3 id="dayPassTitle" style="margin:0;font-size:1.6rem;font-weight:700;"></h3>' +
+                    '<button type="button" id="dayPassClose" style="background:none;border:none;color:#fff;font-size:1.8rem;line-height:1;cursor:pointer;">&times;</button>' +
+                '</div>' +
+                '<p id="dayPassSub" style="margin:10px 0 18px;color:#9a9a9a;"></p>' +
+                '<ul id="dayPassList" style="list-style:none;margin:0;padding:0;"></ul>' +
+            '</div>';
+        document.body.appendChild(modal);
+
+        modal.querySelector("#dayPassClose").addEventListener("click", function() {
+            modal.style.display = "none";
+        });
+        modal.addEventListener("click", function(e) {
+            if (e.target === modal) modal.style.display = "none";
+        });
     }
-    // Cancel: nothing happens
+
+    document.getElementById("dayPassTitle").textContent = "Assign " + label + " (₱" + price + ")";
+    document.getElementById("dayPassSub").textContent = "Select the member for this day pass:";
+
+    var listEl = document.getElementById("dayPassList");
+    listEl.innerHTML = "";
+
+    members.forEach(function(member, i) {
+        var sub = member.planExpiry ? "Expired on: " + member.planExpiry : "No Active Monthly Pass";
+        var li = document.createElement("li");
+        li.style.cssText = "display:flex;justify-content:space-between;align-items:center;padding:16px 0;" +
+            (i < members.length - 1 ? "border-bottom:1px solid #2c2c2c;" : "");
+        li.innerHTML =
+            '<div>' +
+                '<div style="font-size:1.25rem;font-weight:700;">' + member.name +
+                    ' <span style="font-size:1rem;font-weight:400;color:#9a9a9a;">(' + member.id + ')</span></div>' +
+                '<div style="font-size:0.95rem;color:#8a8a8a;margin-top:4px;">' + sub + '</div>' +
+            '</div>' +
+            '<button type="button" style="background:#c8c8c8;color:#fff;border:none;border-radius:8px;padding:10px 22px;font-size:1rem;font-weight:700;cursor:pointer;">Select</button>';
+
+        li.querySelector("button").addEventListener("click", function() {
+            modal.style.display = "none";
+            addOne(field);
+        });
+        listEl.appendChild(li);
+    });
+
+    modal.style.display = "flex";
 }
 
 var btnAddNonMember = document.getElementById("btnAddNonMember");
 if (btnAddNonMember) {
-    btnAddNonMember.addEventListener("click", confirmPass);
+    btnAddNonMember.addEventListener("click", function() {
+        openDayPassModal("Non-Member Day Pass", 80, "nonMemberCount");
+    });
 }
 
 var btnAddMember = document.getElementById("btnAddMember");
 if (btnAddMember) {
-    btnAddMember.addEventListener("click", confirmPass);
+    btnAddMember.addEventListener("click", function() {
+        openDayPassModal("Member Day Pass", 60, "memberCount");
+    });
 }
-
     // Monthly Plan & Modal Assignment Logic (monthly.html)
     function showPlanMessage(text) {
         var msg = document.getElementById("planMessage");
@@ -310,4 +474,20 @@ if (btnAddMember) {
 
     // Initial render
     updateUI();
+
+    // Expose shared gym data helpers for statistics and other modules
+    window.gymData = {
+        loadMembers: loadMembers,
+        saveMembers: saveMembers,
+        loadLog: loadLog,
+        saveLog: saveLog,
+        getPlanStatus: getPlanStatus,
+        todayString: todayString,
+        toDateString: toDateString,
+        parseDate: parseDate,
+        addDays: addDays,
+        formatDate: formatDate,
+        peso: peso,
+        refresh: updateUI
+    };
 })();
